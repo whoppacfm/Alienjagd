@@ -1,0 +1,134 @@
+	staramount=1000
+
+
+rem Just some flags to Enable / Disable Sprite or DOT rendering
+
+	spriteflag=1
+	dotsflag=0
+
+
+rem Graphics 640,480
+rem SetBuffer BackBuffer()
+
+	set display mode 640,480,16
+
+rem global stara=LoadImage("graphics\star1.bmp")
+rem Global starb=LoadImage("graphics\star2.bmp")
+rem Global starc=LoadImage("graphics\star3.bmp")
+
+	 i=1
+	 stara=i: load image "star1.bmp",i : inc i
+	 starb=i: load image "star2.bmp",i : inc i
+	 starc=i: load image "star3.bmp",i : inc i
+
+
+
+
+rem ;star array
+rem Type star
+rem  Field rad,speed,angle
+rem  End Type
+
+
+	  i=0
+	  rad=i:inc i
+	  speed=i:inc i
+	  angle=i:inc i
+	  star_size=i
+
+ 	  dim stars(staramount+1,star_size)
+
+
+
+
+rem             ------------------ set up stars  -------------------
+
+
+	 For sc=0 To staramount
+	     stars(sc,rad) = Rnd(280)+80
+	     stars(sc,angle) = Rnd(360)
+	     stars(sc,speed) = Rnd(5)+1
+	 Next sc
+
+
+
+rem                 --------------  main loop  -----------------
+
+
+	 sync on
+
+    rem turn background remember off & Simple Masking on
+    set sprite 1,0,1   
+    set sprite 2,0,1   
+    set sprite 3,0,1   
+
+
+
+			repeat
+
+				k$=inkey$()
+
+				 Cls
+ 				 gosub update
+
+				sync
+
+			until k$<>""
+
+End
+
+
+
+
+
+
+
+
+rem           -------------- update each star in turn ----------------
+
+
+update:
+
+
+
+ for star=0 to staramount
+
+
+	  xx=320+(Sin(stars(star,angle))*stars(star,rad))
+	  yy=240+(Cos(stars(star,angle))*stars(star,rad))
+
+		rem   ;replace star if it goes off screen
+
+	  If xx<0 Or xx>639 Or yy<0 Or yy>480
+		   stars(star,rad)=Rnd(40)+40
+		   stars(star,angle)=Rnd(360)
+   		stars(star,speed)=Rnd(5)+1
+ 		 EndIf
+
+
+
+		 starspeed=stars(star,speed)
+	    stars(star,rad)=stars(star,rad)+(starspeed*2)
+
+
+    if spriteflag=1
+	     If starspeed=1 then sprite 1,xx,yy,stara : paste sprite 1,xx,yy
+	     If starspeed=2 Or starspeed=3 then sprite 2,xx,yy,starb : paste sprite 2,xx,yy
+	     If starspeed>3 then sprite 3,xx,yy,starc: paste sprite 3,xx,yy
+    endif
+
+
+	 if dotsflag=1
+		  If starspeed=1 Then ink rgb(50,50,50),0
+		  If starspeed=2 Then ink rgb(100,100,100),0
+		  If starspeed=3 Then ink rgb(150,150,150),0
+		  If starspeed=4 Then ink rgb(200,200,200),0
+		  If starspeed=5 Then ink rgb(250,250,250),0
+		 dot xx,yy
+	endif
+
+ Next star
+
+
+return
+
