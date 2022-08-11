@@ -1,0 +1,1218 @@
+hide mouse
+
+sync on
+
+
+rem variablen
+punkte=0
+zeit=100
+
+
+
+rem   BUG: Wenn Capslock eingeschaltet ist 
+rem			stürzt er bei der letzten Kugel ab
+
+
+
+
+
+REM FUNKTIONEN UND SUBS LADEN
+
+rem start()
+
+gosub sound:
+gosub menu:
+
+startof:
+gosub aliens:
+gosub space:
+gosub bitmaps:
+
+
+cls
+
+set current bitmap 0
+
+shotdelay=500
+maxbullets=5: resetbullets(maxbullets)
+bullets=5
+
+rem shotbuffer=timer()
+
+qxpos=-300
+qypos=rnd(350)
+qx1pos=-400
+qy1pos=rnd(348)
+qx2pos=900
+qy2pos=rnd(350)
+qx3pos=700
+qy3pos=rnd(350)
+qx4pos=-200
+qy4pos=rnd(350)-6
+qx5pos=800
+qy5pos=rnd(350)+5
+qx6pos=-100
+qy6pos=rnd(350)-10
+qx7pos=800
+qy7pos=rnd(350)+10
+
+
+
+image1=17
+image2=19
+image3=22
+image4=24
+g=8
+g2=20
+
+REM MAINLOOP
+rem loop sound 3
+
+
+rem timer
+set text font "Courier"
+ink rgb(244,214,210),0
+text 0,0,"0123456789"
+
+for a=0 to 10
+   get image 80+a,x,0,x+10,13
+   inc x,8
+next a
+
+
+st=timer()
+countdown=60
+punkte=0
+
+
+   
+  
+
+
+
+
+
+
+rem loop sound 4
+loop sound 8
+repeat
+	ink rgb(244,214,210),0
+	set text font "Courier"
+	set cursor 590,63
+	rem print zeit
+	set cursor 590,78
+	print punkte
+	sync
+	
+	 if timer()=>st+1000
+      st=timer()
+      dec countdown
+   endif
+
+   sprite 28,590,63,80+val(left$(str$(countdown),1))
+   sprite 29,598,63,80+val(right$(str$(countdown),1))
+
+
+
+
+if escapekey() then gosub menu
+
+	
+
+
+	rem alien1
+	if g<8 then g=8
+	qxpos=qxpos+g : IF qxpos>800
+								qxpos=-200
+								qypos=rnd(350)
+							 	g=rnd(12)
+						 endif
+	image1=image1+1 : IF image1>18 THEN image1=17
+
+	sprite 15,qxpos,qypos,image1
+	rem bob 16,qxpos+200,qypos+50,image
+
+	rem treffer alien1
+	if mousex()>=qxpos-70 and mousex()<= qxpos+70 and mousey()>=qypos-10 and mousey()<=qypos+70 and bullets>0 and mouseclick()=1
+		punkte=punkte+5
+		qxpos=-200
+		qypos=rnd(350)
+		hide sprite 15
+		
+		play sound 1
+		play sound 3
+		
+		gosub stirb
+		
+		shotbuffer=timer()
+		reducebullets(bullets)
+		bullets=bullets-1
+		
+		show sprite 15
+		
+		
+		rem circle qxpos,qypos,20
+		
+		
+		
+	endif
+	
+
+	
+	rem alien2
+	if g2<8 then g2=20
+	qx1pos=qx1pos+g2 : IF qx1pos>800
+								qx1pos=-600
+								qy1pos=rnd(350)
+							 	g=rnd(25)
+						 endif
+	rem image1=image1+1 : IF image1>18 THEN image1=17
+	sprite 16,qx1pos,qy1pos,image1
+	
+	
+	rem treffer alien2
+	if mousex()>=qx1pos-70 and mousex()<= qx1pos+70 and mousey()>=qy1pos-10 and mousey()<=qy1pos+70 and bullets>0 and mouseclick()=1 
+		punkte=punkte+5
+		hide sprite 16
+		qx1pos = -200
+		qy1pos=rnd(400)
+		
+
+		play sound 1
+		play sound 3
+				
+		gosub stirb
+		rem circle qxpos,qypos,20
+		
+		shotbuffer=timer()
+		reducebullets(bullets)
+		bullets=bullets-1
+		show sprite 16
+	endif
+	
+
+	rem alien3
+	if g<8 then g=8
+	qx2pos=qx2pos-g : IF qx2pos<-200
+								qx2pos=800
+								qy2pos=rnd(350)
+							 	g=rnd(12)
+						 endif
+	rem image1=image1+1 : IF image1>18 THEN image1=17
+
+	sprite 18,qx2pos,qy2pos,image1
+	rem bob 16,qxpos+200,qypos+50,image
+
+	rem treffer alien3
+	if mousex()>=qx2pos-70 and mousex()<= qx2pos+70 and mousey()>=qy2pos-10 and mousey()<=qy2pos+70 and bullets>0 and mouseclick()=1
+		punkte=punkte+5
+		qx2pos=800
+		qy2pos=rnd(350)
+		hide sprite 18
+		
+		play sound 1
+		play sound 3
+		
+		gosub stirb
+		
+		shotbuffer=timer()
+		reducebullets(bullets)
+		bullets=bullets-1
+		
+		show sprite 18
+		
+		
+		rem circle qxpos,qypos,20
+		
+		
+		
+	endif
+
+
+	rem alien4
+	if g<8 then g=8
+	qx3pos=qx3pos-g : IF qx3pos<-200
+								qx3pos=800
+								qy3pos=rnd(350)
+							 	g=rnd(12)
+						 endif
+	image3=image3+1 : IF image3>23 THEN image3=22
+
+	sprite 19,qx3pos,qy3pos,image3
+	rem bob 16,qxpos+200,qypos+50,image
+
+	rem treffer alien4
+	if mousex()>=qx3pos-20 and mousex()<= qx3pos+50 and mousey()>=qy3pos-10 and mousey()<=qy3pos+50 and bullets>0 and mouseclick()=1
+		punkte=punkte+10
+		qx3pos=800
+		qy3pos=rnd(350)
+		hide sprite 19
+		
+		play sound 1
+		play sound 3
+		
+		gosub stirb
+		
+		shotbuffer=timer()
+		reducebullets(bullets)
+		bullets=bullets-1
+		
+		show sprite 19
+		
+		
+		rem circle qxpos,qypos,20
+		
+		
+		
+	endif
+
+	rem alien5
+	if g2<8 then g2=20
+	qx4pos=qx4pos+10 : IF qx4pos>800
+								qx4pos=-600
+								qy4pos=rnd(350)
+							 	g=rnd(25)
+						 endif
+	image4=image4+1 : IF image4>25 THEN image4=24
+	sprite 20,qx4pos,qy4pos,image4
+	
+	
+	rem treffer alien5
+	if mousex()>=qx4pos-30 and mousex()<= qx4pos+30 and mousey()>=qy4pos-10 and mousey()<=qy4pos+30 and bullets>0 and mouseclick()=1 
+		punkte=punkte+15
+		hide sprite 20
+		qx4pos = -200
+		qy4pos=rnd(350)
+		
+
+		play sound 1
+		play sound 3
+				
+		gosub stirb
+		rem circle qxpos,qypos,20
+		
+		shotbuffer=timer()
+		reducebullets(bullets)
+		bullets=bullets-1
+		show sprite 20
+	endif
+	
+
+
+	rem alien6
+	if g<8 then g=8
+	qx5pos=qx5pos-12 : IF qx5pos<-200
+								qx5pos=1300
+								qy5pos=rnd(350)
+							 	g=rnd(12)
+						 endif
+	rem image3=image3+1 : IF image3>23 THEN image3=22
+
+	sprite 21,qx5pos,qy5pos,image3
+	rem bob 16,qxpos+200,qypos+50,image
+
+	rem treffer alien6
+	if mousex()>=qx5pos-20 and mousex()<= qx5pos+50 and mousey()>=qy5pos-10 and mousey()<=qy5pos+50 and bullets>0 and mouseclick()=1
+		punkte=punkte+10
+		qx5pos=1300
+		qy5pos=rnd(350)
+		hide sprite 21
+		
+		play sound 1
+		play sound 3
+		
+		gosub stirb
+		
+		shotbuffer=timer()
+		reducebullets(bullets)
+		bullets=bullets-1
+		
+		show sprite 21
+		
+		
+		rem circle qxpos,qypos,20
+		
+		
+		
+	endif
+
+
+	rem alien7
+	if g<8 then g=8
+	qx6pos=qx6pos+12 : IF qx6pos>800
+								qx6pos=-200
+								qy6pos=rnd(350)
+							 	g=rnd(12)
+						 endif
+	rem image3=image3+1 : IF image3>23 THEN image3=22
+
+	sprite 22,qx6pos,qy6pos,image3
+	rem bob 16,qxpos+200,qypos+50,image
+
+	rem treffer alien7
+	if mousex()>=qx6pos-20 and mousex()<= qx6pos+50 and mousey()>=qy6pos-10 and mousey()<=qy6pos+50 and bullets>0 and mouseclick()=1
+		punkte=punkte+10
+		qx6pos=-200
+		qy6pos=rnd(350)
+		hide sprite 22
+		
+		play sound 1
+		play sound 3
+		
+		gosub stirb
+		
+		shotbuffer=timer()
+		reducebullets(bullets)
+		bullets=bullets-1
+		
+		show sprite 22
+		
+		
+		rem circle qxpos,qypos,20
+		
+		
+		
+	endif
+
+
+	rem alien8
+	if g<8 then g=8
+	qx7pos=qx7pos-12 : IF qx7pos<-300
+								qx7pos=900
+								qy7pos=rnd(350)
+							 	g=rnd(12)
+						 endif
+	rem image3=image3+1 : IF image3>23 THEN image3=22
+
+	sprite 23,qx7pos,qy7pos,image4
+	rem bob 16,qxpos+200,qypos+50,image
+
+	rem treffer alien8
+	if mousex()>=qx7pos-20 and mousex()<= qx7pos+30 and mousey()>=qy7pos-10 and mousey()<=qy7pos+30 and bullets>0 and mouseclick()=1
+		punkte=punkte+10
+		qx7pos=900
+		qy7pos=rnd(350)
+		hide sprite 23
+		
+		play sound 1
+		play sound 3
+		
+		gosub stirb
+		
+		shotbuffer=timer()
+		reducebullets(bullets)
+		bullets=bullets-1
+		
+		show sprite 23
+		
+		
+		rem circle qxpos,qypos,20
+		
+		
+		
+	endif
+
+
+	sprite 26,530,-25,28
+	sprite 25,mousex() - 17,mousey() - 17,2
+	
+	
+
+  rem sync
+
+	
+	if (mouseclick()=1) and (timer()-shotbuffer > shotdelay) and (bullets > 0)
+		
+		ink 0,rgb(255,255,255): cls: sync
+		ink 0,0: cls: sync
+
+		play sound 1
+		shotbuffer=timer()
+		reducebullets(bullets)
+		bullets=bullets-1
+	endif
+
+	
+	rem nachladen
+	if mouseclick()=2 
+		play sound 2
+		bullets=5:resetbullets(maxbullets)
+	endif
+	
+	
+	
+	rem allbewegung
+	sx=sx+mousemovex()
+	sy=sy+mousemovey()
+	if sx<0 then sx=0
+	if sy<0 then sy=0
+	if sx>mapx-641 then sx=mapx-641
+	if sy>mapy-481 then sy=mapy-481
+	
+	
+	
+	
+	
+	
+	rem hintergrund kopieren
+	copy bitmap 6,sx,sy,sx+639,sy+479,0,0,0,638,478
+	
+
+	
+	
+
+
+
+
+rem copy bitmap 6,0
+until countdown = 0
+
+
+
+
+
+
+delete sprite 15
+delete sprite 16
+delete sprite 18
+delete sprite 19
+delete sprite 20
+delete sprite 21
+delete sprite 22
+delete sprite 23
+
+if sprite exist(17) then delete sprite 17
+if bob exist(1) then delete bob 1
+if bob exist(2) then delete bob 2
+if bob exist(3) then delete bob 3
+if bob exist(4) then delete bob 4
+if bob exist(5) then delete bob 5
+
+
+delete sprite 25
+delete sprite 26
+delete sprite 28
+delete sprite 29
+
+stop sound 1
+stop sound 2
+stop sound 3
+rem stop sound 4
+stop sound 8
+
+
+
+
+
+gosub menu
+
+
+
+
+
+
+
+
+REM FUNKTIONEN&SUBS
+
+stirb:
+image2=18
+do
+image2=image2+1
+if image2>21
+	delete sprite 17
+	
+	exit
+endif
+sprite 17,mousex()-17,mousey()-17,image2
+sync
+loop
+
+return
+
+
+
+function resetbullets(bullets)
+	bob 10,55,410,5
+	for i = 2 to bullets+1
+	bob i,(i * 30),400,1
+	next i
+endfunction
+
+
+function reducebullets(bullets)
+	bob bullets+1,((bullets+1) * 30),400,4
+	if bullets=1 then bob 10,55,410,3
+endfunction
+
+
+sound:
+	load sound "daten\cannon.wav",1
+	load sound "daten\ping.wav",2
+	load sound "daten\splash.wav",3
+	rem load sound "daten\beat.wav",4
+	load sound "daten\intro.wav",5	
+	load sound "daten\butt.wav",6
+	load sound "daten\explode1.wav",7
+	load sound "daten\suppe.wav",8
+return
+
+
+bitmaps:
+	load bitmap "daten\bullet.bmp",1: get image 1,3,0,15,60: delete bitmap 1
+	load bitmap "daten\fadenkreuz5.bmp",2: get image 2,0,0,48,50: delete bitmap 2
+	load bitmap "daten\reload2.bmp",3: get image 3,0,0,150,50: delete bitmap 3
+	create bitmap 4,15,60	: rem bullet
+	create bitmap 5,148,37	: rem reload
+	load bitmap "daten\gsicht2.bmp",1:get image 28,0,0,123,145:delete bitmap 1
+
+return
+
+
+space:
+	mapx=1000 : mapy=800
+	load bitmap "daten\stars4.bmp",6
+	rem create bitmap 6,mapx,mapy
+	rem ink rgb(255,255,0),0: for t=1 to 200 : dot rnd(mapx),rnd(mapy) : next t
+	rem ink 235,0: for i = 1 to 900: dot rnd(mapx), rnd(mapy):next i
+	rem ink 5677,0: for u = 1 to 3000: dot rnd(mapx), rnd(mapy):next u
+return
+
+
+aliens:
+	load bitmap "daten\aliens.bmp",17
+	get image 17,185,1,283,55
+	get image 18,285,1,376,55
+		
+	get image 22,1,60,80,110
+	get image 23,80,60,150,110	
+
+	get image 24,145,60,210,110
+	get image 25,205,60,260,110
+	
+	get image 19,0,117,95,236
+	get image 20,101,116,195,236
+	get image 21,195,116,306,236
+	delete bitmap 17
+return
+
+
+
+
+
+
+rem ########### highscores
+rem ----------------------------- fill_hiscoretable
+function fill_hiscoretable(file$,name$,multiplier)
+
+dim scores$(20,3)
+
+for t=1 to 20
+	if name$="test" 
+		scores$(t,1)="test"+chr$(rnd(25)+65)+str$(t)
+	else
+		scores$(t,1)=name$
+	endif
+	scores$(t,2)=str$((30*multiplier)-((t-1)*multiplier))
+next t
+
+save array file$,scores$(0)
+undim scores$(20,3)
+
+endfunction
+
+rem ----------------------------- print_hiscoretable
+function print_hiscoretable(file$,title$,howmany,spacing,titley,scoresy)
+
+dim scores$(20,3)
+load array file$,scores$(0)
+
+center text screen width()/2,titley,title$
+if howmany>20 then howmany=20
+for t=1 to howmany
+	text (screen width()/2)-(90+(text size()*2)),scoresy+(spacing*t),str$(t)+"."
+	text (screen width()/2)-(65+(text size()*1)),scoresy+(spacing*t),scores$(t,1)
+	text (screen width()/2)+(90+(text size()*1)),scoresy+(spacing*t),scores$(t,2)
+next t
+
+undim scores$(20,3)
+
+endfunction
+
+
+rem ----------------------------- printwaiting_hiscoretable
+rem (like print, only waits for a key, used for screen redraws)
+function printwaiting_hiscoretable(file$,title$,howmany,spacing,titley,scoresy)
+
+dim scores$(20,3)
+load array file$,scores$(0)
+
+repeat
+center text screen width()/2,titley,title$
+if howmany>20 then howmany=20
+for t=1 to howmany
+	text (screen width()/2)-(90+(text size()*2)),scoresy+(spacing*t),str$(t)+"."
+	text (screen width()/2)-(65+(text size()*1)),scoresy+(spacing*t),scores$(t,1)
+	text (screen width()/2)+(90+(text size()*1)),scoresy+(spacing*t),scores$(t,2)
+next t
+sync
+until mouseclick()=1 or spacekey()=1
+
+undim scores$(20,3)
+
+endfunction
+
+rem ----------------------------- sort_hiscoretable
+function sort_hiscoretable(file$,newname$,newscore)
+
+dim scores$(20,3)
+load array file$,scores$(0)
+
+for t=20 to 1 step -1
+	if newscore>=val(scores$(t,2))
+		if t<20 then scores$(t+1,2)=scores$(t,2):scores$(t+1,1)=scores$(t,1)
+		scores$(t,2)=str$(newscore):scores$(t,1)=newname$
+	endif
+next t
+
+save array file$,scores$(0)
+undim scores$(20,3)
+
+endfunction
+
+rem ----------------------------- evaluate_hiscore
+function evaluate_hiscore(file$,newscore)
+
+dim scores$(20,3)
+load array file$,scores$(0)
+
+for t=20 to 1 step -1
+	if newscore>=val(scores$(t,2))
+		position=t
+		if t<20 then scores$(t+1,2)=scores$(t,2):scores$(t+1,1)=scores$(t,1)
+		scores$(t,2)=str$(newscore):scores$(t,1)=newname$
+	endif
+next t
+
+undim scores$(20,3)
+
+endfunction position
+
+rem ------------------------------save last hiscore name
+function save_last_hiscore_name(file$,name$)
+
+dim scores$(20,3)
+load array file$,scores$(0)
+
+scores$(1,0)=name$
+
+save array file$,scores$(0)
+undim scores$(20,3)
+
+endfunction
+
+rem ------------------------------load last hiscore name
+function load_last_hiscore_name(file$)
+
+dim scores$(20,3)
+load array file$,scores$(0)
+
+name$=scores$(1,0)
+
+undim scores$(20,3)
+
+endfunction name$
+
+rem ------------------------------save hidata
+function save_hidata(file$,data$,number)
+
+if number>0 and number<21
+dim scores$(20,3)
+load array file$,scores$(0)
+
+scores$(number,3)=data$
+
+save array file$,scores$(0)
+undim scores$(20,3)
+endif
+
+endfunction
+
+rem ------------------------------load hidata
+function load_hidata(file$,number)
+
+if number>0 and number<21
+dim scores$(20,3)
+load array file$,scores$(0)
+
+data$=scores$(number,3)
+
+undim scores$(20,3)
+endif
+
+endfunction data$
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+rem ############ menü
+menu:
+loop sound 5
+	
+	
+	
+	
+
+	rem sterne
+	rem ink rgb(244,214,210),1
+	rem randomize 200
+	rem for h=0 to 200
+	 rem ink rnd(32000),1
+	 rem dot rnd(640),rnd(480)
+	rem next h
+
+	cls
+	load bitmap "daten\all2.bmp",7
+	
+	
+	copy bitmap 7,0
+
+	sleep 400
+	play sound 7
+	sleep 100
+	load bitmap "daten\fadenkreuz5.bmp",12: get image 9,0,0,48,50: delete bitmap 12
+	load bitmap "daten\alien2.bmp",8: get image 5,0,0,500,130: delete bitmap 8
+	sprite 27,80,0,5
+	sleep 400
+	play sound 6
+	load bitmap "daten\start1.bmp",9:get image 6,0,0,200,80: delete bitmap 9
+	sprite 5,225,150,6
+	sleep 100
+	play sound 6
+	load bitmap "daten\hi1.bmp",10:get image 7,0,0,200,80: delete bitmap 10
+	sprite 6,225,200,7
+	sleep 100
+	play sound 6
+	load bitmap "daten\end1.bmp",11:get image 8,0,0,200,80: delete bitmap 11
+	sprite 7,225,250,8
+	
+	load bitmap "daten\start2.bmp",12:get image 10,0,0,200,80: delete bitmap 12
+	sprite 9,225,150,10
+	load bitmap "daten\hi2.bmp",13:get image 11,0,0,200,80: delete bitmap 13
+	sprite 10,225,200,11
+	load bitmap "daten\end2.bmp",14:get image 12,0,0,200,80: delete bitmap 14
+	sprite 11,225,250,12
+	hide sprite 9
+	hide sprite 10
+	hide sprite 11
+	
+	load bitmap "daten\phreaky.bmp",15:get image 13,0,0,100,70: delete bitmap 15
+	sprite 13, 520,400,13
+
+set cursor 20,420:print "ver.  0.8"
+set cursor 20,440:print "Phreaky Coderz"
+set cursor 20,460:print "http://www.phreaky.de"
+
+
+do
+	rem loop sound 5		
+	
+	bob 20,mousex() - 17,mousey() - 17,9
+	
+	sync
+	if mousex()<=420 and mousex() >= 225 and mousey()<=215 and mousey() >= 165
+		rem play sound 1
+		hide sprite 5
+		show sprite 9
+	else
+		hide sprite 9 
+		show sprite 5
+	endif
+	
+	if mousex()<=420 and mousex() >= 225 and mousey()<=250 and mousey() >= 220
+		rem play sound 1
+		hide sprite 6
+		show sprite 10
+	else 
+		hide sprite 10
+		show sprite 6
+	endif
+	
+	if mousex()<=420 and mousex() >= 225 and mousey()<=305 and mousey() >= 270
+		rem play sound 1
+		hide sprite 7
+		show sprite 11
+	else
+		hide sprite 11
+		show sprite 7
+	endif 
+		
+	if mousex()<=420 and mousex() >= 225 and mousey()<=215 and mousey() >= 165 and mouseclick()=1
+		delete bob 20
+		delete sprite 27
+		delete sprite 5
+		delete sprite 6
+		delete sprite 7
+		delete sprite 9
+		delete sprite 10
+		delete sprite 11
+		delete sprite 13
+		delete image 5
+		delete image 6
+		delete image 7
+		delete image 8
+		rem delete image 9
+		delete image 10
+		delete image 11
+		delete image 13
+		stop sound 5
+		stop sound 6
+		stop sound 7
+		goto startof 
+	endif
+	if mousex()<=420 and mousex() >= 225 and mousey()<=250 and mousey() >= 220 and mouseclick()=1
+		delete bob 20
+		delete sprite 27
+		delete sprite 5
+		delete sprite 6
+		delete sprite 7
+		delete sprite 9
+		delete sprite 10
+		delete sprite 11
+		delete sprite 13
+		delete image 5
+		delete image 6
+		delete image 7
+		delete image 8
+		delete image 10
+		delete image 11
+		delete image 13
+		gosub scores:
+	endif	
+	if mousex()<=420 and mousex() >= 225 and mousey()<=305 and mousey() >= 270 and mouseclick()=1
+		delete bob 20
+		delete sprite 27
+		delete sprite 5
+		delete sprite 6
+		delete sprite 7
+		delete sprite 9
+		delete sprite 10
+		delete sprite 11
+		delete sprite 13
+		delete image 5
+		delete image 6
+		delete image 7
+		delete image 8
+		delete image 10
+		delete image 11
+		delete image 13
+
+
+
+
+
+	gosub abspann:
+	endif
+		
+loop
+	
+	
+
+
+	rem delete bitmap 7
+	delete bob 20
+	delete sprite 27
+	delete sprite 5
+	delete sprite 6
+	delete sprite 7
+	delete sprite 9
+	delete sprite 10
+	delete sprite 11
+	delete sprite 13
+	delete image 5
+	delete image 6
+	delete image 7
+	delete image 8
+	rem delete image 9
+	delete image 10
+	delete image 11
+	delete image 13
+	stop sound 5
+	
+	CLS	
+	
+
+return
+
+
+
+scores:
+cls
+
+
+
+load bitmap "daten\back1.bmp",30:get image 30,0,0,200,80
+sprite 29,225,400,30
+load bitmap "daten\back2.bmp",31:get image 31,0,0,200,80
+sprite 30,225,400,31
+hide sprite 30
+
+do
+
+bob 21,mousex() - 17,mousey() - 17,9:sync
+
+
+if mousex()<=420 and mousex() >= 225 and mousey()<=440 and mousey() >= 380
+		rem play sound 1
+		hide sprite 29
+		show sprite 30
+	else
+		hide sprite 30 
+		show sprite 29
+	endif
+if mousex()<=420 and mousex() >= 225 and mousey()<=440 and mousey() >= 380 and mouseclick()=1
+	delete bitmap 30:delete bitmap 31	
+	delete image 30:delete image 31
+	delete sprite 29:delete sprite 30
+	delete bob 21
+	cls
+	gosub menu:
+endif
+
+copy bitmap 7,0
+
+loop
+return
+
+
+
+
+
+
+
+rem ########## higscore beispiel
+highscores:
+
+
+cls
+
+set text font "Verdana"
+set text size 24
+
+input "fill a hiscoretable?(y/n)";yes$
+
+if yes$="y" or yes$="Y" then fill_hiscoretable("myscoretest","PsychoDad",5)
+
+cls
+
+rem "myscoretest" is the file name used,"15 of the 20 scores" is the title
+rem 15 is how many scores to display(out of 20 max),16 is the spacing between the lines
+rem 50 is the y coordinate of the title
+rem 80 is the y coordinate of the first highscore
+print_hiscoretable("myscoretest","HIGHSCORES",20,16,10,20)
+
+
+
+do
+print "last name used: ";load_last_hiscore_name("myscoretest")
+
+st$="hello"+str$(rnd(10))
+print "storing data:";st$;" at position 1"
+
+save_hidata("myscoretest",st$,1)
+
+ret$=load_hidata("myscoretest",1)
+
+print "retrieved data:";ret$;" form position 1"
+
+input "name?";newname$
+input "score?";newscore
+
+position=evaluate_hiscore("myscoretest",newscore)
+print "your position will be nr.";position
+
+save_last_hiscore_name("myscoretest",newname$)
+
+sort_hiscoretable("myscoretest",newname$,newscore)
+
+wait key
+
+cls
+
+print_hiscoretable("myscoretest","updated table (shows 20)",20,16,50,80)
+
+wait key
+loop
+
+
+end
+
+
+
+return
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+rem ######## abspann
+abspann:
+cls
+sync rate 80
+sync on
+hide mouse
+
+
+total_lines=0
+
+repeat
+	read a$
+	inc total_lines
+until a$="*"
+
+dec total_lines
+restore
+
+
+pages=total_lines/9
+
+set text font "Arial"
+set text size 28
+set text to bold
+ink rgb(255,255,0),rgb(0,0,0)
+
+
+i=1
+
+for p=0 to pages
+
+	create bitmap 1,640,256
+	set current bitmap 1
+	y=0
+
+	for c=0 to 8
+		read text$
+		if text$="*" then text$=""
+		center text 320,y,text$
+		y=y+28
+	next c
+
+	get image i,192,0,448,256
+	delete bitmap 1
+	inc i
+
+next p
+
+startexture=i
+
+create bitmap 1,256,256
+set current bitmap 1
+
+ink rgb(255,255,255),rgb(0,0,0)
+
+for a=0 to 100
+	dot x,y
+	x=rnd(254)+1
+	y=rnd(254)+1
+next a
+
+get image startexture,0,0,256,256
+delete bitmap 1
+
+
+dec i
+z=0
+
+for a=1 to i
+
+	make object cube a,50
+	scale object a,100,0,150
+	texture object a,a
+	ghost object on a
+	position object a,0,0,z
+	z=z+74
+
+next a
+
+
+c#=-50
+
+position camera 0,1,c#
+
+yrotate camera 180
+xrotate camera 20
+
+
+texture backdrop startexture
+fog color rgb(0,0,0)
+fog distance 250
+fog on
+
+
+vanish=(pages*100)+100
+
+
+update#=0.25
+
+do
+
+	position camera 0,20,c#
+	c#=c#+update#
+	if c#>vanish then c#=-50
+
+	if upkey() then update#=update#+0.25
+	if downkey() then update#=update#-0.25
+
+	sync
+
+loop
+
+data "A L I E N J A G D"
+data ""
+data ""
+data "Version 0.8"
+data ""
+data ""
+data "by"
+data "PHREAKY CODERZ"
+data "JAN 2001"
+data ""
+data ""
+data "http://www.phreaky.de"
+data ""
+data ""
+data ""
+data ""
+data ""
+data ""
+data ""
+data ""
+data ""
+data ""
+data ""
+data ""
+data ""
+data "*"
+
+return
